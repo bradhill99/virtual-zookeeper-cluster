@@ -4,7 +4,7 @@
   vars:
     zk:
       version: 3.4.6
-      mirror: http://apache.xl-mirror.nl
+      mirror: http://archive.apache.org
       dataDir: /var/lib/zookeeper
       installDir: "/opt"
   tasks:
@@ -28,7 +28,7 @@
     set_fact: zk_dir="{{zk.installDir}}/{{zk_name}}"
   - name: Zookeeper | Ensure Zookeeper tar is downloaded
     get_url:
-      url: "{{zk.mirror}}/zookeeper/{{zk_name}}/{{zk_name}}.tar.gz"
+      url: "{{zk.mirror}}/dist/zookeeper/{{zk_name}}/{{zk_name}}.tar.gz"
       dest: "/tmp"
   - name: ZooKeeper | Ensure tar is extracted
     command: tar xzf /tmp/{{zk_name}}.tar.gz chdir="{{zk.installDir}}"
@@ -37,7 +37,7 @@
   - name: ZooKeeper | Ensure zoo.conf is present
     template:
       src: "templates/zk/zoo.cfg"
-      dest: "{{zk_dir}}/conf"
+      dest: "{{zk_dir}}/conf/"
   - name: ZooKeeper | Ensures data dir {{zk.dataDir}} exists
     file:
       path: "{{zk.dataDir}}"
@@ -45,6 +45,6 @@
   - name: ZooKeeper | Ensure myid is set to {{cluster_node_seq}} in {{zk.dataDir}}/myid
     template:
       src: "templates/zk/myid"
-      dest: "{{zk.dataDir}}"
+      dest: "{{zk.dataDir}}/"
   - name: ZooKeeper | Ensure the service is running
     shell: "{{zk_dir}}/bin/zkServer.sh restart"
